@@ -1,44 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>General Chemistry I Homepage</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-        }
-        .lesson-link {
-            display: block;
-            margin: 10px 0;
-            font-size: 18px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="General Chemistry I lecture notes and recorded lectures.">
+  <title>General Chemistry I | CHEM 111</title>
+
+  <style>
+    :root {
+      --navy: #17365d;
+      --navy-dark: #102a49;
+      --blue-light: #eaf1f8;
+      --red: #b3261e;
+      --red-dark: #8f1f19;
+      --text: #202124;
+      --muted: #5f6368;
+      --border: #d7dde5;
+      --background: #f5f7fa;
+      --card: #ffffff;
+      --shadow: 0 2px 8px rgba(23, 54, 93, 0.08);
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--background);
+      line-height: 1.5;
+    }
+
+    .site-header {
+      background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+      color: white;
+      padding: 48px 20px 42px;
+    }
+
+    .header-inner,
+    main,
+    .site-footer {
+      width: min(100% - 32px, 1000px);
+      margin-inline: auto;
+    }
+
+    .course-label {
+      margin: 0 0 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.82;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3.25rem);
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      max-width: 700px;
+      margin: 12px 0 22px;
+      font-size: 1.08rem;
+      opacity: 0.92;
+    }
+
+    .playlist-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 10px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .playlist-link:hover,
+    .playlist-link:focus-visible {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-1px);
+    }
+
+    main {
+      padding: 34px 0 48px;
+    }
+
+    .intro {
+      margin-bottom: 24px;
+    }
+
+    .intro h2 {
+      margin: 0 0 5px;
+      color: var(--navy);
+      font-size: 1.55rem;
+    }
+
+    .intro p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .lesson-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .lesson-card {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .lesson-number {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .lesson-content {
+      min-width: 0;
+    }
+
+    .lesson-card h2 {
+      margin: 1px 0 12px;
+      color: var(--text);
+      font-size: 1.08rem;
+      line-height: 1.35;
+    }
+
+    .lesson-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 9px 13px;
+      border: 0;
+      border-radius: 7px;
+      font: inherit;
+      font-size: 0.93rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+    }
+
+    .button:focus-visible,
+    .playlist-link:focus-visible {
+      outline: 3px solid #f9d65c;
+      outline-offset: 2px;
+    }
+
+    .button-notes {
+      background: var(--blue-light);
+      color: var(--navy);
+    }
+
+    .button-notes:hover,
+    .button-notes:focus-visible {
+      background: #dce8f4;
+    }
+
+    .button-video {
+      background: var(--red);
+      color: white;
+    }
+
+    .button-video:hover,
+    .button-video:focus-visible,
+    .button-video.is-open {
+      background: var(--red-dark);
+    }
+
+    .video-slot {
+      margin-top: 16px;
+    }
+
+    .video-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border-radius: 9px;
+      background: #000;
+    }
+
+    .video-frame iframe,
+    .video-frame > div {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .video-loading {
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      padding: 24px;
+      color: var(--muted);
+      background: #eef1f4;
+      border-radius: 9px;
+      text-align: center;
+    }
+
+    .site-footer {
+      padding: 0 0 36px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      text-align: center;
+    }
+
+    @media (max-width: 620px) {
+      .site-header {
+        padding-top: 36px;
+      }
+
+      .lesson-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .lesson-number {
+        width: 38px;
+        height: 38px;
+        font-size: 0.95rem;
+      }
+
+      .lesson-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .button,
+      .playlist-link {
+        transition: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Welcome to General Chemistry I</h1>
-    <p>Select a lesson to begin:</p>
-    <a href="lessons/lesson1/Lesson1-TheScienceofChemistry_ScientificNotationandUnits.htm" class="lesson-link">Lesson 1: The Science of Chemistry, Scientific Notation and Units</a>
-    <a href="lessons/lesson2/Lesson2-SignificantFiguresandDimensionalAnalysis.htm" class="lesson-link">Lesson 2: Significant Figures and Dimensional Analysis</a>
-    <a href="lessons/lesson3/Lesson3-Matter_Energy_Forces_andtheAtom.htm" class="lesson-link">Lesson 3: Matter, Energy, Forces, and the Atom</a>
-    <a href="lessons/lesson4/Lesson4-TheAtom_IsotopicNotation_Ions_andNamingcompounds.htm" class="lesson-link">Lesson 4: The Atom, Isotopic Notation, Ions, and Nomenclature I</a>
-    <a href="lessons/lesson5/Lesson5-BalancingEquationsPeriodicTable.htm" class="lesson-link">Lesson 5: Balancing Equations and the Periodic Table</a>
-    <a href="lessons/lesson6/Lesson6-MolesandStoichiometry.htm" class="lesson-link">Lesson 6: Moles and Stoichiometry</a>
-    <a href="lessons/lesson7/Lesson7-EarlyQuantumTheory.htm" class="lesson-link">Lesson 7: Early Quantum Theory</a>
-    <a href="lessons/lesson8/Lesson8-QuantumTheory.htm" class="lesson-link">Lesson 8: Quantum Theory</a>
-    <a href="lessons/lesson9/Lesson9-ElectronConfigurations.htm" class="lesson-link">Lesson 9: Electron Configurations</a>
-    <a href="lessons/lesson10/Lesson10-IonicCompoundsandRadii.htm" class="lesson-link">Lesson 10: Ionic Compounds and Radii</a>
-    <a href="lessons/lesson11/Lesson11-LewisStructures.htm" class="lesson-link">Lesson 11: Lewis Structures</a>
-    <a href="lessons/lesson12/Lesson12-VSEPR_MolecularPolarity_IntermolecularForces.htm" class="lesson-link">Lesson 12: VSEPR, Molecular Polarity, Intermolecular Forces</a>
-    <a href="lessons/lesson13/Lesson13-MolecularOrbitalandValenceBondTheory.htm" class="lesson-link">Lesson 13: Molecular Orbital and Valence Bond Theory</a>
-    <a href="lessons/lesson14/Lesson14-ChemicalReactionsI_NomenclatureIII.htm" class="lesson-link">Lesson 14: Chemical Reactions I, Nomenclature III</a>
-    <a href="lessons/lesson15/Lesson15-ChemicalReactionsII.htm" class="lesson-link">Lesson 15: Chemical Reactions II</a>
-    <a href="lessons/lesson16/Lesson16-ChemicalCalculationswithLimitingReactants.htm" class="lesson-link">Lesson 16: Chemical Calculations with Limiting Reactants</a>
-    <a href="lessons/lesson17/Lesson17-ChemicalCalculationsinSolution.htm" class="lesson-link">Lesson 17: Chemical Calculations in Solution</a>
-    <a href="lessons/lesson18/Lesson18-GasesPartI.htm" class="lesson-link">Lesson 18: Gases Part I</a>
-    <a href="lessons/lesson19/Lesson19-GasesPartII.htm" class="lesson-link">Lesson 19: Gases Part II</a>
-    <a href="lessons/lesson20/Lesson20-ThermodynamicProcessesandThermochemistry.htm" class="lesson-link">Lesson 20: Thermodynamic Processes and Thermochemistry</a>
-    <a href="lessons/lesson21/Lesson21-ThermochemistryII.htm" class="lesson-link">Lesson 21: Thermochemistry II</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <p class="course-label">CHEM 111</p>
+      <h1>General Chemistry I</h1>
+      <p class="subtitle">
+        Lecture notes and recorded lectures for General Chemistry I.
+        Choose a lesson below to open the notes or watch the corresponding lecture.
+      </p>
+      <a class="playlist-link"
+         href="https://www.youtube.com/playlist?list=PLkWozYLFgH6fy_ZFag3RVincFM3yK57-O"
+         target="_blank"
+         rel="noopener noreferrer">
+        <span aria-hidden="true">▶</span> Open Full YouTube Playlist
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="lessons-heading">
+      <h2 id="lessons-heading">Lessons</h2>
+      <p>
+        Lecture videos open directly on this page. Only one player is loaded at a time,
+        keeping the page fast even with all 21 lectures.
+      </p>
+    </section>
+
+    <section class="lesson-list" aria-label="General Chemistry I lessons">
+
+      <article class="lesson-card" data-lesson="1">
+        <div class="lesson-number" aria-hidden="true">1</div>
+        <div class="lesson-content">
+          <h2>Lesson 1: The Science of Chemistry, Scientific Notation and Units</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson1/Lesson1-TheScienceofChemistry_ScientificNotationandUnits.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-1"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-1"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 1 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="2">
+        <div class="lesson-number" aria-hidden="true">2</div>
+        <div class="lesson-content">
+          <h2>Lesson 2: Significant Figures and Dimensional Analysis</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson2/Lesson2-SignificantFiguresandDimensionalAnalysis.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-2"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-2"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 2 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="3">
+        <div class="lesson-number" aria-hidden="true">3</div>
+        <div class="lesson-content">
+          <h2>Lesson 3: Matter, Energy, Forces, and the Atom</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson3/Lesson3-Matter_Energy_Forces_andtheAtom.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-3"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-3"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 3 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="4">
+        <div class="lesson-number" aria-hidden="true">4</div>
+        <div class="lesson-content">
+          <h2>Lesson 4: The Atom, Isotopic Notation, Ions, and Nomenclature I</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson4/Lesson4-TheAtom_IsotopicNotation_Ions_andNamingcompounds.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-4"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-4"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 4 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="5">
+        <div class="lesson-number" aria-hidden="true">5</div>
+        <div class="lesson-content">
+          <h2>Lesson 5: Balancing Equations and the Periodic Table</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson5/Lesson5-BalancingEquationsPeriodicTable.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-5"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-5"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 5 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="6">
+        <div class="lesson-number" aria-hidden="true">6</div>
+        <div class="lesson-content">
+          <h2>Lesson 6: Moles and Stoichiometry</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson6/Lesson6-MolesandStoichiometry.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-6"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-6"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 6 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="7">
+        <div class="lesson-number" aria-hidden="true">7</div>
+        <div class="lesson-content">
+          <h2>Lesson 7: Early Quantum Theory</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson7/Lesson7-EarlyQuantumTheory.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-7"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-7"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 7 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="8">
+        <div class="lesson-number" aria-hidden="true">8</div>
+        <div class="lesson-content">
+          <h2>Lesson 8: Quantum Theory</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson8/Lesson8-QuantumTheory.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-8"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-8"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 8 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="9">
+        <div class="lesson-number" aria-hidden="true">9</div>
+        <div class="lesson-content">
+          <h2>Lesson 9: Electron Configurations</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson9/Lesson9-ElectronConfigurations.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-9"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-9"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 9 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="10">
+        <div class="lesson-number" aria-hidden="true">10</div>
+        <div class="lesson-content">
+          <h2>Lesson 10: Ionic Compounds and Radii</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson10/Lesson10-IonicCompoundsandRadii.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-10"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-10"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 10 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="11">
+        <div class="lesson-number" aria-hidden="true">11</div>
+        <div class="lesson-content">
+          <h2>Lesson 11: Lewis Structures</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson11/Lesson11-LewisStructures.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-11"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-11"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 11 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="12">
+        <div class="lesson-number" aria-hidden="true">12</div>
+        <div class="lesson-content">
+          <h2>Lesson 12: VSEPR, Molecular Polarity, Intermolecular Forces</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson12/Lesson12-VSEPR_MolecularPolarity_IntermolecularForces.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-12"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-12"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 12 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="13">
+        <div class="lesson-number" aria-hidden="true">13</div>
+        <div class="lesson-content">
+          <h2>Lesson 13: Molecular Orbital and Valence Bond Theory</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson13/Lesson13-MolecularOrbitalandValenceBondTheory.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-13"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-13"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 13 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="14">
+        <div class="lesson-number" aria-hidden="true">14</div>
+        <div class="lesson-content">
+          <h2>Lesson 14: Chemical Reactions I, Nomenclature III</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson14/Lesson14-ChemicalReactionsI_NomenclatureIII.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-14"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-14"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 14 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="15">
+        <div class="lesson-number" aria-hidden="true">15</div>
+        <div class="lesson-content">
+          <h2>Lesson 15: Chemical Reactions II</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson15/Lesson15-ChemicalReactionsII.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-15"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-15"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 15 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="16">
+        <div class="lesson-number" aria-hidden="true">16</div>
+        <div class="lesson-content">
+          <h2>Lesson 16: Chemical Calculations with Limiting Reactants</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson16/Lesson16-ChemicalCalculationswithLimitingReactants.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-16"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-16"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 16 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="17">
+        <div class="lesson-number" aria-hidden="true">17</div>
+        <div class="lesson-content">
+          <h2>Lesson 17: Chemical Calculations in Solution</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson17/Lesson17-ChemicalCalculationsinSolution.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-17"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-17"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 17 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="18">
+        <div class="lesson-number" aria-hidden="true">18</div>
+        <div class="lesson-content">
+          <h2>Lesson 18: Gases Part I</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson18/Lesson18-GasesPartI.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-18"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-18"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 18 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="19">
+        <div class="lesson-number" aria-hidden="true">19</div>
+        <div class="lesson-content">
+          <h2>Lesson 19: Gases Part II</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson19/Lesson19-GasesPartII.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-19"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-19"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 19 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="20">
+        <div class="lesson-number" aria-hidden="true">20</div>
+        <div class="lesson-content">
+          <h2>Lesson 20: Thermodynamic Processes and Thermochemistry</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson20/Lesson20-ThermodynamicProcessesandThermochemistry.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-20"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-20"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 20 lecture video"
+               hidden></div>
+        </div>
+      </article>
+      <article class="lesson-card" data-lesson="21">
+        <div class="lesson-number" aria-hidden="true">21</div>
+        <div class="lesson-content">
+          <h2>Lesson 21: Thermochemistry II</h2>
+          <div class="lesson-actions">
+            <a class="button button-notes" href="lessons/lesson21/Lesson21-ThermochemistryII.htm">
+              <span aria-hidden="true">📖</span> Lecture Notes
+            </a>
+            <button class="button button-video"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="video-slot-21"
+                    onclick="toggleVideo(this)">
+              <span aria-hidden="true">▶</span> Watch Lecture
+            </button>
+          </div>
+          <div id="video-slot-21"
+               class="video-slot"
+               role="region"
+               aria-label="Lesson 21 lecture video"
+               hidden></div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    General Chemistry I &middot; CHEM 111
+  </footer>
+
+  <script>
+    const PLAYLIST_ID = "PLkWozYLFgH6fy_ZFag3RVincFM3yK57-O";
+
+    let youtubeApiReady = false;
+    let player = null;
+    let activeLesson = null;
+    let pendingLesson = null;
+
+    // YouTube calls this function automatically when its IFrame API is ready.
+    window.onYouTubeIframeAPIReady = function () {
+      youtubeApiReady = true;
+
+      if (pendingLesson !== null) {
+        createPlayer(pendingLesson);
+      }
+    };
+
+    function toggleVideo(button) {
+      const card = button.closest(".lesson-card");
+      const lessonNumber = Number(card.dataset.lesson);
+      const playlistIndex = lessonNumber - 1;
+      const slot = card.querySelector(".video-slot");
+
+      // Clicking the open lesson's button again collapses it.
+      if (activeLesson === lessonNumber) {
+        closeActiveVideo();
+        return;
+      }
+
+      closeActiveVideo();
+
+      activeLesson = lessonNumber;
+      pendingLesson = playlistIndex;
+
+      button.classList.add("is-open");
+      button.setAttribute("aria-expanded", "true");
+      button.innerHTML = '<span aria-hidden="true">✕</span> Hide Lecture';
+
+      slot.hidden = false;
+      slot.innerHTML =
+        '<div class="video-loading">Loading Lesson ' +
+        lessonNumber +
+        ' video…</div>';
+
+      if (youtubeApiReady) {
+        createPlayer(playlistIndex);
+      }
+    }
+
+    function createPlayer(playlistIndex) {
+      const card = document.querySelector(
+        '.lesson-card[data-lesson="' + activeLesson + '"]'
+      );
+
+      if (!card) return;
+
+      const slot = card.querySelector(".video-slot");
+
+      slot.innerHTML =
+        '<div class="video-frame"><div id="youtube-player"></div></div>';
+
+      player = new YT.Player("youtube-player", {
+        width: "100%",
+        height: "100%",
+        playerVars: {
+          playsinline: 1,
+          rel: 0
+        },
+        events: {
+          onReady: function (event) {
+            // YouTube playlist indexes are zero-based:
+            // Lesson 1 -> index 0, Lesson 2 -> index 1, etc.
+            event.target.cuePlaylist({
+              listType: "playlist",
+              list: PLAYLIST_ID,
+              index: playlistIndex,
+              startSeconds: 0
+            });
+          }
+        }
+      });
+
+      pendingLesson = null;
+    }
+
+    function closeActiveVideo() {
+      if (player && typeof player.destroy === "function") {
+        player.destroy();
+      }
+
+      player = null;
+      pendingLesson = null;
+
+      document.querySelectorAll(".video-slot").forEach(function (slot) {
+        slot.hidden = true;
+        slot.innerHTML = "";
+      });
+
+      document.querySelectorAll(".button-video").forEach(function (button) {
+        button.classList.remove("is-open");
+        button.setAttribute("aria-expanded", "false");
+        button.innerHTML =
+          '<span aria-hidden="true">▶</span> Watch Lecture';
+      });
+
+      activeLesson = null;
+    }
+  </script>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
